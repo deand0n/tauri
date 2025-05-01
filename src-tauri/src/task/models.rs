@@ -1,26 +1,26 @@
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 
-#[derive(Queryable, Selectable, Serialize, Deserialize)]
+#[derive(Queryable, Selectable, Serialize, Deserialize, Identifiable)]
 #[serde(rename_all = "camelCase")]
 #[diesel(table_name = crate::db::schema::task)]
 #[diesel(check_for_backend(diesel::sqlite::Sqlite))]
 pub struct Task {
     pub id: i32,
     pub description: String,
-    pub due_date: String,
+    pub due_date: Option<String>,
     pub status: String,
 }
 
-#[derive(Insertable, Serialize, Deserialize)]
+#[derive(Insertable, Serialize, Deserialize, AsChangeset)]
 #[serde(rename_all = "camelCase")]
 #[diesel(table_name  = crate::db::schema::task)]
-pub struct NewTask {
+pub struct CreateTask {
     pub description: String,
-    pub due_date: String,
+    pub due_date: Option<String>,
 }
 
-#[derive(Queryable, Selectable, Serialize, Deserialize)]
+#[derive(Queryable, Selectable, Serialize, Deserialize, Identifiable)]
 #[serde(rename_all = "camelCase")]
 #[diesel(table_name = crate::db::schema::task_repeat)]
 #[diesel(check_for_backend(diesel::sqlite::Sqlite))]

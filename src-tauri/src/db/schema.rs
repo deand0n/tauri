@@ -4,7 +4,7 @@ diesel::table! {
     task (id) {
         id -> Integer,
         description -> Text,
-        due_date -> Text,
+        due_date -> Nullable<Text>,
         status -> Text,
     }
 }

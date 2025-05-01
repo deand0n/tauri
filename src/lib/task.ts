@@ -1,19 +1,21 @@
 export type Task = {
-	id: string;
+	id: number;
 	description: string;
-	dueDate: string;
-	repeat: TaskRepeat[];
+	dueDate?: string;
 	status: TaskStatus;
+};
+export type CreateTask = {
+	description: string;
+	dueDate?: string;
 };
 
 export type TaskRepeat = {
-    id: string;
+    id: number;
+    taskId: number;
 	frequency: Frequency;
 	repeatAt: string;
-    task: Task;
 	endDate?: string;
 };
-
 
 export enum Frequency {
 	HOUR = "Hour",

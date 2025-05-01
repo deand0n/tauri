@@ -1,7 +1,7 @@
 import { invoke } from "@tauri-apps/api/core";
 import { createSignal } from "solid-js";
 import logo from "./../assets/logo.svg";
-import { TaskStatus, Task } from "../lib/task";
+import { Task, CreateTask } from "../lib/task";
 
 export type HomeProps = {};
 
@@ -9,7 +9,7 @@ export const Home = ({}: HomeProps) => {
 	const [taskDesc, setTaskDesc] = createSignal<Task>();
 
 	const call = async () => {
-		const task: Task = {
+		const task: CreateTask = {
 			description: "test task",
 			dueDate: new Date().toISOString(),
 		};

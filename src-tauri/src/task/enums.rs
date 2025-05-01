@@ -7,6 +7,16 @@ pub enum TaskStatus {
     Completed,
 }
 
+impl Into<String> for TaskStatus {
+    fn into(self) -> String {
+        match self {
+            TaskStatus::New => "New".to_string(),
+            TaskStatus::InProgress => "InProgress".to_string(),
+            TaskStatus::Completed => "Completed".to_string(),
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub enum Frequency {
     Hour,
