@@ -10,12 +10,15 @@ export const Home = ({}: HomeProps) => {
 
 	const call = async () => {
 		const task: Task = {
-			id: "123",
 			description: "test task",
 			dueDate: new Date().toISOString(),
-			status: TaskStatus.NEW,
 		};
-		setTaskDesc(await invoke("create_task", { task }));
+		setTaskDesc(await invoke("create_task", { newTask: task }));
+	};
+
+	const getTasks = async () => {
+		const tasks = await invoke("get_tasks");
+		console.log(tasks);
 	};
 
 	return (
@@ -36,6 +39,9 @@ export const Home = ({}: HomeProps) => {
 			<p>desc: {taskDesc()?.description}</p>
 			<button type="button" onClick={call}>
 				Hello Click
+			</button>
+			<button type="button" onClick={getTasks}>
+				Get Tasks
 			</button>
 		</main>
 	);
