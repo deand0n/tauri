@@ -1,3 +1,4 @@
 node_modules
 dist
-./src-tauri/db.sql
+src-tauri/db.sql
+.env

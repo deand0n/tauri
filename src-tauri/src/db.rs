@@ -1,8 +1,8 @@
-use std::{env, error::Error};
-
 use diesel::{Connection, SqliteConnection};
 use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
 use dotenvy::dotenv;
+use std::{env, error::Error};
+
 pub const MIGRATIONS: EmbeddedMigrations = embed_migrations!("./migrations/");
 
 pub fn establish_connection() -> SqliteConnection {
