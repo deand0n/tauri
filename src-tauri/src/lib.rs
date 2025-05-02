@@ -21,6 +21,7 @@ pub fn run() {
             task::commands::get_tasks,
             task::commands::update_task,
             task::commands::delete_task,
+            task::commands::delete_all_tasks,
             task::commands::get_task,
             task::commands::complete_task,
         ])

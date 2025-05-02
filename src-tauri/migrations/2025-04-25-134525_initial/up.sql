@@ -2,7 +2,7 @@
 CREATE TABLE task (
     id INTEGER PRIMARY KEY NOT NULL,
     description TEXT NOT NULL,
-    due_date TEXT,
+    due_date TEXT NOT NULL,
     status TEXT NOT NULL DEFAULT 'New'
 );
 

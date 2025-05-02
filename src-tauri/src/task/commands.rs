@@ -56,6 +56,15 @@ pub fn delete_task(id: i32) {
 }
 
 #[tauri::command]
+pub fn delete_all_tasks() {
+    let mut conn = establish_connection();
+
+    diesel::delete(task::table)
+        .execute(&mut conn)
+        .expect("Cannot delete tasks");
+}
+
+#[tauri::command]
 pub fn get_task(id: i32) -> Option<Task> {
     let mut conn = establish_connection();
 

@@ -1,12 +1,12 @@
 export type Task = {
 	id: number;
 	description: string;
-	dueDate?: string;
+	dueDate: string;
 	status: TaskStatus;
 };
 export type CreateTask = {
 	description: string;
-	dueDate?: string;
+	dueDate: string;
 };
 
 export type TaskRepeat = {

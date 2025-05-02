@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 pub struct Task {
     pub id: i32,
     pub description: String,
-    pub due_date: Option<String>,
+    pub due_date: String,
     pub status: String,
 }
 
@@ -17,7 +17,7 @@ pub struct Task {
 #[diesel(table_name  = crate::db::schema::task)]
 pub struct CreateTask {
     pub description: String,
-    pub due_date: Option<String>,
+    pub due_date: String,
 }
 
 #[derive(Queryable, Selectable, Serialize, Deserialize, Identifiable)]

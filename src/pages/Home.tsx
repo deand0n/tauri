@@ -1,47 +1,76 @@
 import { invoke } from "@tauri-apps/api/core";
-import { createSignal } from "solid-js";
-import logo from "./../assets/logo.svg";
+import { createResource, Show, Suspense } from "solid-js";
 import { Task, CreateTask } from "../lib/task";
+import { format, isAfter } from "date-fns";
+import { TaskList } from "./task/task-list";
+import { isBefore } from "date-fns/fp";
 
 export type HomeProps = {};
 
 export const Home = ({}: HomeProps) => {
-	const [taskDesc, setTaskDesc] = createSignal<Task>();
+	const [tasks, { refetch }] = createResource<Task[]>(async () => {
+		return invoke("get_tasks");
+	});
 
-	const call = async () => {
-		const task: CreateTask = {
-			description: "test task",
-			dueDate: new Date().toISOString(),
+	const derivedTasks = () => {
+		const past: Task[] = [],
+			present: Task[] = [],
+			future: Task[] = [];
+
+		for (const t of tasks() ?? []) {
+			if (isAfter(t.dueDate, new Date())) {
+				past.push(t);
+			} else if (isBefore(t.dueDate, new Date())) {
+				future.push(t);
+			} else {
+				present.push(t);
+			}
+		}
+		return {
+			pastTasks: past,
+			presentTasks: present,
+			futureTasks: future,
 		};
-		setTaskDesc(await invoke("create_task", { newTask: task }));
 	};
 
-	const getTasks = async () => {
-		const tasks = await invoke("get_tasks");
-		console.log(tasks);
+	const addTask = async () => {
+		const task: CreateTask = {
+			description: "test task",
+			dueDate: format(new Date(), "yyyy-MM-dd"),
+		};
+		await invoke("create_task", { newTask: task });
+		refetch();
+	};
+
+	const deleteAllTasks = async () => {
+		await invoke("delete_all_tasks");
+		refetch();
 	};
 
 	return (
 		<main class="container">
-			<h1>Welcome to Tauri + Solid</h1>
-			<div class="row">
-				<a href="https://vitejs.dev" target="_blank">
-					<img src="/vite.svg" class="logo vite" alt="Vite logo" />
-				</a>
-				<a href="https://tauri.app" target="_blank">
-					<img src="/tauri.svg" class="logo tauri" alt="Tauri logo" />
-				</a>
-				<a href="https://solidjs.com" target="_blank">
-					<img src={logo} class="logo solid" alt="Solid logo" />
-				</a>
-			</div>
-			<p>Click on the Tauri, Vite, and Solid logos to learn more.</p>
-			<p>desc: {taskDesc()?.description}</p>
-			<button type="button" onClick={call}>
-				Hello Click
+			<Suspense fallback={<div>Loading...</div>}>
+				<Show
+					when={tasks()?.length}
+					fallback={<div>No tasks found</div>}
+				>
+					past
+					<TaskList tasks={derivedTasks().pastTasks} />
+					present
+					<TaskList tasks={derivedTasks().presentTasks} />
+					future
+					<TaskList tasks={derivedTasks().futureTasks} />
+				</Show>
+			</Suspense>
+			<button type="button" class="btn btn-primary" onClick={addTask}>
+				Create Task
 			</button>
-			<button type="button" onClick={getTasks}>
-				Get Tasks
+			<button
+				type="button"
+				class="btn btn-danger"
+				onClick={deleteAllTasks}
+			>
+				Delete All Tasks
 			</button>
 		</main>
 	);
