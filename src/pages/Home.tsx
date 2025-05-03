@@ -1,6 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 import { createResource, Show, Suspense } from "solid-js";
-import { Task, CreateTask } from "../lib/task";
+import { Task, CreateTask, TaskStatus } from "../lib/task";
 import { format, isAfter } from "date-fns";
 import { TaskList } from "./task/task-list";
 import { isBefore } from "date-fns/fp";
@@ -15,9 +15,15 @@ export const Home = ({}: HomeProps) => {
 	const derivedTasks = () => {
 		const past: Task[] = [],
 			present: Task[] = [],
-			future: Task[] = [];
+			future: Task[] = [],
+			completed: Task[] = [];
 
 		for (const t of tasks() ?? []) {
+			if (t.status === TaskStatus.COMPLETED) {
+				completed.push(t);
+				continue;
+			}
+
 			if (isAfter(t.dueDate, new Date())) {
 				past.push(t);
 			} else if (isBefore(t.dueDate, new Date())) {
@@ -30,6 +36,7 @@ export const Home = ({}: HomeProps) => {
 			pastTasks: past,
 			presentTasks: present,
 			futureTasks: future,
+			completedTasks: completed,
 		};
 	};
 
@@ -60,6 +67,8 @@ export const Home = ({}: HomeProps) => {
 					<TaskList tasks={derivedTasks().presentTasks} />
 					future
 					<TaskList tasks={derivedTasks().futureTasks} />
+					completed
+					<TaskList tasks={derivedTasks().completedTasks} />
 				</Show>
 			</Suspense>
 			<button type="button" class="btn btn-primary" onClick={addTask}>

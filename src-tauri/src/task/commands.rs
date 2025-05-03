@@ -76,11 +76,22 @@ pub fn get_task(id: i32) -> Option<Task> {
 }
 
 #[tauri::command]
-pub fn complete_task(id: i32) -> Option<Task> {
+pub fn toggle_task_status(id: i32) -> Option<Task> {
     let mut conn = establish_connection();
 
+    let task: Task = task::table
+        .find(id)
+        .first(&mut conn)
+        .optional()
+        .expect("Cannot load task")?;
+
+    let new_status: TaskStatus = match task.status.into() {
+        TaskStatus::New => TaskStatus::Completed,
+        TaskStatus::Completed => TaskStatus::New,
+    };
+
     diesel::update(task::table.find(id))
-        .set(task::dsl::status.eq::<String>(TaskStatus::Completed.into()))
+        .set(task::dsl::status.eq::<String>(new_status.into()))
         .get_result(&mut conn)
         .optional()
         .expect("Cannot load task")

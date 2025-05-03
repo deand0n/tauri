@@ -27,6 +27,5 @@ export enum Frequency {
 
 export enum TaskStatus {
 	NEW = "New",
-	IN_PROGRESS = "InProgress",
 	COMPLETED = "Completed",
 }

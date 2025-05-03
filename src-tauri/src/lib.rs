@@ -23,7 +23,7 @@ pub fn run() {
             task::commands::delete_task,
             task::commands::delete_all_tasks,
             task::commands::get_task,
-            task::commands::complete_task,
+            task::commands::toggle_task_status,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
