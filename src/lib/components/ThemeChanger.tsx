@@ -1,82 +1,98 @@
 import { createSignal, For, onMount } from "solid-js";
-import { JSX } from "solid-js/h/jsx-runtime";
 import { useTranslation } from "../translation";
 
 enum themes {
 	LIGHT = "light",
-	CUPCAKE = "cupcake",
-	BUMBLEBEE = "bumblebee",
-	EMERALD = "emerald",
-	CORPORATE = "corporate",
-	SYNTHWAVE = "synthwave",
-	RETRO = "retro",
-	CYBERPUNK = "cyberpunk",
+	// CUPCAKE = "cupcake",
+	// BUMBLEBEE = "bumblebee",
+	// EMERALD = "emerald",
+	// CORPORATE = "corporate",
+	// SYNTHWAVE = "synthwave",
+	// RETRO = "retro",
+	// CYBERPUNK = "cyberpunk",
 	VALENTINE = "valentine",
-	GARDEN = "garden",
-	LOFI = "lofi",
-	PASTEL = "pastel",
-	FANTASY = "fantasy",
-	WIREFRAME = "wireframe",
-	CMYK = "cmyk",
-	AUTUMN = "autumn",
-	ACID = "acid",
-	LEMONADE = "lemonade",
-	WINTER = "winter",
-	NORD = "nord",
+	// GARDEN = "garden",
+	// LOFI = "lofi",
+	// PASTEL = "pastel",
+	// FANTASY = "fantasy",
+	// WIREFRAME = "wireframe",
+	// CMYK = "cmyk",
+	// AUTUMN = "autumn",
+	// ACID = "acid",
+	// LEMONADE = "lemonade",
+	// WINTER = "winter",
+	// NORD = "nord",
 	CARAMELLATTE = "caramellatte",
-	SILK = "silk",
+	// SILK = "silk",
 
 	DARK = "dark",
-	HALLOWEEN = "halloween",
-	FOREST = "forest",
-	AQUA = "aqua",
-	BLACK = "black",
-	LUXURY = "luxury",
+	// HALLOWEEN = "halloween",
+	// FOREST = "forest",
+	// AQUA = "aqua",
+	// BLACK = "black",
+	// LUXURY = "luxury",
 	DRACULA = "dracula",
-	BUSINESS = "business",
-	NIGHT = "night",
+	// BUSINESS = "business",
+	// NIGHT = "night",
 	COFFEE = "coffee",
-	DIM = "dim",
-	SUNSET = "sunset",
-	ABBYSS = "abyss",
+	// DIM = "dim",
+	// SUNSET = "sunset",
+	// ABBYSS = "abyss",
 }
 
 export const ThemeChanger = () => {
 	const { t } = useTranslation();
-	const [theme, setTheme] = createSignal(themes.DARK);
-	const html = document.body.parentElement;
+	const [currentTheme, setCurrentTheme] = createSignal(
+		localStorage.getItem("theme") ?? themes.LIGHT,
+	);
 
 	onMount(() => {
-		const newTheme = localStorage.getItem("theme") ?? themes.LIGHT;
-
-		if (newTheme) {
-			setTheme(newTheme as themes);
-			html?.setAttribute("data-theme", newTheme);
-		}
+		localStorage.setItem("theme", currentTheme());
+		document.documentElement.setAttribute("data-theme", currentTheme());
 	});
 
-	const onThemeChange: JSX.EventHandlerUnion<HTMLSelectElement, Event> = (
-		event,
-	) => {
-		// @ts-expect-error value will always be present
-		const newTheme = event.target.value as themes;
-		setTheme(newTheme);
-		html?.setAttribute("data-theme", newTheme);
-		localStorage.setItem("theme", newTheme);
+	const onThemeChange = (t: string) => {
+		localStorage.setItem("theme", t);
+		setCurrentTheme(t);
 	};
 
 	return (
-		<label class="label">
-			<span>{t("theme.changer.label")}</span>
-			<select onChange={onThemeChange} class="select" value={theme()}>
+		<div class="">
+			<div tabindex="0" role="button" class="btn m-1">
+				<span>{t("theme.changer.label")}</span>
+				<svg
+					width="12px"
+					height="12px"
+					class="inline-block h-2 w-2 fill-current opacity-60"
+					xmlns="http://www.w3.org/2000/svg"
+					viewBox="0 0 2048 2048"
+				>
+					<path d="M1799 349l242 241-1017 1017L7 590l242-241 775 775 775-775z"></path>
+				</svg>
+			</div>
+			<ul
+				tabindex="0"
+				class="dropdown-content bg-base-300 rounded-box z-1 w-52 p-2 shadow-2xl"
+			>
 				<For each={Object.values(themes)}>
 					{(theme) => (
-						<option value={theme}>
-							{t(`theme.changer.options.${theme}`)}
-						</option>
+						<li>
+							<input
+								type="radio"
+								name="theme-dropdown"
+								class="theme-controller btn btn-sm btn-block btn-ghost justify-start"
+								classList={{
+									"btn-primary": currentTheme() === theme,
+									"!bg-primary-300": currentTheme() === theme,
+								}}
+								aria-label={t(`theme.changer.options.${theme}`)}
+								value={theme}
+								onChange={() => onThemeChange(theme)}
+							/>
+						</li>
 					)}
 				</For>
-			</select>
-		</label>
+			</ul>
+		</div>
 	);
 };
