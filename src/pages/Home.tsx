@@ -4,11 +4,13 @@ import { Task, CreateTask, TaskStatus } from "../lib/task";
 import { format, isAfter } from "date-fns";
 import { TaskList } from "./task/task-list";
 import { isBefore } from "date-fns/fp";
+import { useTranslation } from "../lib/translation";
 
 export type HomeProps = {};
 
 export const Home = ({}: HomeProps) => {
 	const [tasks, setTasks] = createSignal<Task[]>();
+	const { t } = useTranslation();
 
 	const derivedTasks = () => {
 		const past: Task[] = [],
@@ -77,23 +79,23 @@ export const Home = ({}: HomeProps) => {
 						when={!!tasks()?.length}
 						fallback={<div>No tasks found</div>}
 					>
-						past
 						<TaskList
+							title={t("task.list.past")}
 							tasks={derivedTasks().pastTasks}
 							onCheckedChange={onTaskCheckedChange}
 						/>
-						present
 						<TaskList
+							title={t("task.list.present")}
 							tasks={derivedTasks().presentTasks}
 							onCheckedChange={onTaskCheckedChange}
 						/>
-						future
 						<TaskList
+							title={t("task.list.future")}
 							tasks={derivedTasks().futureTasks}
 							onCheckedChange={onTaskCheckedChange}
 						/>
-						completed
 						<TaskList
+							title={t("task.list.completed")}
 							tasks={derivedTasks().completedTasks}
 							onCheckedChange={onTaskCheckedChange}
 						/>

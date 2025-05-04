@@ -1,10 +1,13 @@
 import { Route, Router } from "@solidjs/router";
 import { Home } from "./pages/Home";
+import { TranslationProvider } from "./lib/translation";
 
 export const App = () => {
 	return (
-		<Router>
-			<Route path="" component={Home}></Route>
-		</Router>
+		<TranslationProvider>
+			<Router>
+				<Route path="" component={Home}></Route>
+			</Router>
+		</TranslationProvider>
 	);
 };

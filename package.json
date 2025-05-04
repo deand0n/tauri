@@ -13,6 +13,7 @@
 	},
 	"license": "MIT",
 	"dependencies": {
+		"@solid-primitives/i18n": "^2.2.1",
 		"@solidjs/router": "^0.15.3",
 		"@tailwindcss/vite": "^4.1.5",
 		"@tauri-apps/api": "^2",

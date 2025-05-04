@@ -1,0 +1,11 @@
+{
+	"task": {
+		"list": {
+			"title": "Tasks",
+			"past": "Past",
+			"present": "Today",
+			"future": "Future",
+			"completed": "Completed"
+		}
+	}
+}
