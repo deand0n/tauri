@@ -5,6 +5,7 @@ import { format, isAfter } from "date-fns";
 import { TaskList } from "./task/task-list";
 import { isBefore } from "date-fns/fp";
 import { useTranslation } from "../lib/translation";
+import { ThemeChanger } from "../lib/components/ThemeChanger";
 
 export type HomeProps = {};
 
@@ -85,6 +86,7 @@ export const Home = ({}: HomeProps) => {
 							onCheckedChange={onTaskCheckedChange}
 						/>
 						<TaskList
+							initialOpen={true}
 							title={t("task.list.present")}
 							tasks={derivedTasks().presentTasks}
 							onCheckedChange={onTaskCheckedChange}
@@ -117,9 +119,11 @@ export const Home = ({}: HomeProps) => {
 					</button>
 				</Match>
 				<Match when={!tasks()}>
-					<div>Loading...</div>
+					<div>{t("loading")}</div>
 				</Match>
 			</Switch>
+
+			<ThemeChanger />
 		</main>
 	);
 };

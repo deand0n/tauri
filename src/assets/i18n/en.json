@@ -7,5 +7,49 @@
 			"future": "Future",
 			"completed": "Completed"
 		}
+	},
+	"loading": "Loading...",
+	"error": "An error occurred",
+	"theme": {
+		"changer": {
+			"label": "Select",
+			"options": {
+				"light": "Light",
+				"dark": "Dark",
+				"cupcake": "Cupcake",
+				"bumblebee": "Bumblebee",
+				"emerald": "Emerald",
+				"corporate": "Corporate",
+				"synthwave": "Synthwave",
+				"retro": "Retro",
+				"cyberpunk": "Cyberpunk",
+				"valentine": "Valentine",
+				"halloween": "Halloween",
+				"garden": "Garden",
+				"forest": "Forest",
+				"aqua": "Aqua",
+				"lofi": "Lo-Fi",
+				"pastel": "Pastel",
+				"fantasy": "Fantasy",
+				"wireframe": "Wireframe",
+				"black": "Black",
+				"luxury": "Luxury",
+				"dracula": "Dracula",
+				"cmyk": "CMYK",
+				"autumn": "Autumn",
+				"business": "Business",
+				"acid": "Acid",
+				"lemonade": "Lemonade",
+				"night": "Night",
+				"coffee": "Coffee",
+				"winter": "Winter",
+				"dim": "Dim",
+				"nord": "Nord",
+				"sunset": "Sunset",
+				"caramellatte": "Caramel Latte",
+				"abyss": "Abyss",
+				"silk": "Silk"
+			}
+		}
 	}
 }
