@@ -1,5 +1,5 @@
 import { invoke } from "@tauri-apps/api/core";
-import { createResource, Show, Suspense } from "solid-js";
+import { createSignal, Match, onMount, Show, Switch } from "solid-js";
 import { Task, CreateTask, TaskStatus } from "../lib/task";
 import { format, isAfter } from "date-fns";
 import { TaskList } from "./task/task-list";
@@ -8,9 +8,7 @@ import { isBefore } from "date-fns/fp";
 export type HomeProps = {};
 
 export const Home = ({}: HomeProps) => {
-	const [tasks, { refetch }] = createResource<Task[]>(async () => {
-		return invoke("get_tasks");
-	});
+	const [tasks, setTasks] = createSignal<Task[]>();
 
 	const derivedTasks = () => {
 		const past: Task[] = [],
@@ -45,42 +43,81 @@ export const Home = ({}: HomeProps) => {
 			description: "test task",
 			dueDate: format(new Date(), "yyyy-MM-dd"),
 		};
-		await invoke("create_task", { newTask: task });
-		refetch();
+		const createdTask: Task = await invoke("create_task", {
+			newTask: task,
+		});
+		setTasks([...(tasks() ?? []), createdTask]);
 	};
 
 	const deleteAllTasks = async () => {
 		await invoke("delete_all_tasks");
-		refetch();
+		setTasks([]);
 	};
+
+	const onTaskCheckedChange = async (task: Task) => {
+		const updatedTask: Task = await invoke("toggle_task_status", {
+			id: task.id,
+		});
+
+		setTasks(() =>
+			tasks()!.map((t) => (t.id === task.id ? updatedTask : t)),
+		);
+	};
+
+	onMount(async () => {
+		const t: Task[] = await invoke("get_tasks");
+		setTasks(t);
+	});
 
 	return (
 		<main class="container">
-			<Suspense fallback={<div>Loading...</div>}>
-				<Show
-					when={tasks()?.length}
-					fallback={<div>No tasks found</div>}
-				>
-					past
-					<TaskList tasks={derivedTasks().pastTasks} />
-					present
-					<TaskList tasks={derivedTasks().presentTasks} />
-					future
-					<TaskList tasks={derivedTasks().futureTasks} />
-					completed
-					<TaskList tasks={derivedTasks().completedTasks} />
-				</Show>
-			</Suspense>
-			<button type="button" class="btn btn-primary" onClick={addTask}>
-				Create Task
-			</button>
-			<button
-				type="button"
-				class="btn btn-danger"
-				onClick={deleteAllTasks}
-			>
-				Delete All Tasks
-			</button>
+			<Switch>
+				<Match when={tasks()}>
+					<Show
+						when={!!tasks()?.length}
+						fallback={<div>No tasks found</div>}
+					>
+						past
+						<TaskList
+							tasks={derivedTasks().pastTasks}
+							onCheckedChange={onTaskCheckedChange}
+						/>
+						present
+						<TaskList
+							tasks={derivedTasks().presentTasks}
+							onCheckedChange={onTaskCheckedChange}
+						/>
+						future
+						<TaskList
+							tasks={derivedTasks().futureTasks}
+							onCheckedChange={onTaskCheckedChange}
+						/>
+						completed
+						<TaskList
+							tasks={derivedTasks().completedTasks}
+							onCheckedChange={onTaskCheckedChange}
+						/>
+					</Show>
+
+					<button
+						type="button"
+						class="btn btn-primary"
+						onClick={addTask}
+					>
+						Create Task
+					</button>
+					<button
+						type="button"
+						class="btn btn-danger"
+						onClick={deleteAllTasks}
+					>
+						Delete All Tasks
+					</button>
+				</Match>
+				<Match when={!tasks()}>
+					<div>Loading...</div>
+				</Match>
+			</Switch>
 		</main>
 	);
 };

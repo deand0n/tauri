@@ -8,7 +8,7 @@ use super::{
 };
 
 #[tauri::command]
-pub fn create_task(new_task: CreateTask) {
+pub fn create_task(new_task: CreateTask) -> Task {
     let mut conn = establish_connection();
 
     let new_task = CreateTask {
@@ -18,8 +18,9 @@ pub fn create_task(new_task: CreateTask) {
 
     diesel::insert_into(task::table)
         .values(new_task)
-        .execute(&mut conn)
-        .expect("Cannot insert task");
+        .returning(task::all_columns)
+        .get_result(&mut conn)
+        .expect("Cannot insert task")
 }
 
 #[tauri::command]

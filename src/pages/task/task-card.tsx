@@ -1,19 +1,23 @@
-import { invoke } from "@tauri-apps/api/core";
 import { Task, TaskStatus } from "../../lib/task";
 import { createSignal } from "solid-js";
 
 export type TaskCardProps = {
 	task: Task;
+	onCheckedChange?: (isChecked: boolean) => void;
 };
 
-export const TaskCard = ({ task }: TaskCardProps) => {
+export const TaskCard = ({
+	task,
+	onCheckedChange: onChange,
+}: TaskCardProps) => {
 	const [isChecked, setIsChecked] = createSignal(
 		task.status === TaskStatus.COMPLETED,
 	);
 
-	const toggleStatus = () => {
-		setIsChecked(!isChecked());
-		invoke("toggle_task_status", { id: task.id });
+	const toggleStatus = async () => {
+		const newChecked = isChecked();
+		setIsChecked(!newChecked);
+		onChange?.(newChecked);
 	};
 
 	return (
