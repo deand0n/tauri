@@ -10,8 +10,8 @@ export type CreateTask = {
 };
 
 export type TaskRepeat = {
-    id: number;
-    taskId: number;
+	id: number;
+	taskId: number;
 	frequency: Frequency;
 	repeatAt: string;
 	endDate?: string;

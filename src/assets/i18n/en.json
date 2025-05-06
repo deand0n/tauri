@@ -12,7 +12,7 @@
 	"error": "An error occurred",
 	"theme": {
 		"changer": {
-			"label": "Select",
+			"label": "Theme",
 			"options": {
 				"light": "Light",
 				"dark": "Dark",
