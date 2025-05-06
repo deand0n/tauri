@@ -1,7 +1,7 @@
 import { createSignal, For, onMount } from "solid-js";
 import { useTranslation } from "../translation";
 
-enum themes {
+enum Theme {
 	LIGHT = "light",
 	// CUPCAKE = "cupcake",
 	// BUMBLEBEE = "bumblebee",
@@ -42,8 +42,8 @@ enum themes {
 
 export const ThemeChanger = () => {
 	const { t } = useTranslation();
-	const [currentTheme, setCurrentTheme] = createSignal(
-		localStorage.getItem("theme") ?? themes.LIGHT,
+	const [currentTheme, setCurrentTheme] = createSignal<Theme>(
+		(localStorage.getItem("theme") as Theme) ?? Theme.LIGHT,
 	);
 
 	onMount(() => {
@@ -57,9 +57,10 @@ export const ThemeChanger = () => {
 	};
 
 	return (
-		<div class="">
+		<div class="dropdown">
 			<div tabindex="0" role="button" class="btn m-1">
-				<span>{t("theme.changer.label")}</span>
+				{/* <span>{t("theme.changer.label")}</span> */}
+				<span>{t(`theme.changer.options.${currentTheme()}`)}</span>
 				<svg
 					width="12px"
 					height="12px"
@@ -74,16 +75,16 @@ export const ThemeChanger = () => {
 				tabindex="0"
 				class="dropdown-content bg-base-300 rounded-box z-1 w-52 p-2 shadow-2xl"
 			>
-				<For each={Object.values(themes)}>
+				<For each={Object.values(Theme)}>
 					{(theme) => (
 						<li>
 							<input
 								type="radio"
 								name="theme-dropdown"
-								class="theme-controller btn btn-sm btn-block btn-ghost justify-start"
+								class="theme-controller btn btn-sm btn-block justify-start"
 								classList={{
 									"btn-primary": currentTheme() === theme,
-									"!bg-primary-300": currentTheme() === theme,
+									"btn-ghost": currentTheme() !== theme,
 								}}
 								aria-label={t(`theme.changer.options.${theme}`)}
 								value={theme}

@@ -1,5 +1,5 @@
 import { JSX } from "solid-js";
-import { ThemeChanger } from "../lib/components/ThemeChanger";
+import { ThemeChanger } from "../lib/components/theme-changer";
 import { TranslationProvider } from "../lib/translation";
 
 export type MainPageProps = {

@@ -1,5 +1,5 @@
 import { invoke } from "@tauri-apps/api/core";
-import { isAfter, isBefore, format } from "date-fns";
+import { isAfter, isBefore, format, isSameDay } from "date-fns";
 import { createSignal, Match, onMount, Show, Switch } from "solid-js";
 import { TaskStatus, CreateTask, Task } from "../../lib/task";
 import { useTranslation } from "../../lib/translation";
@@ -21,12 +21,12 @@ export const TaskPage = () => {
 				continue;
 			}
 
-			if (isAfter(t.dueDate, new Date())) {
-				past.push(t);
-			} else if (isBefore(t.dueDate, new Date())) {
-				future.push(t);
-			} else {
+			if (isSameDay(t.dueDate, new Date())) {
 				present.push(t);
+			} else if (isBefore(t.dueDate, new Date())) {
+				past.push(t);
+			} else if (isAfter(t.dueDate, new Date())) {
+				future.push(t);
 			}
 		}
 		return {
