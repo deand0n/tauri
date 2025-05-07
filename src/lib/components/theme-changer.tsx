@@ -51,7 +51,7 @@ export const ThemeChanger = () => {
 		document.documentElement.setAttribute("data-theme", currentTheme());
 	});
 
-	const onThemeChange = (t: string) => {
+	const onThemeChange = (t: Theme) => {
 		localStorage.setItem("theme", t);
 		setCurrentTheme(t);
 	};
@@ -59,7 +59,6 @@ export const ThemeChanger = () => {
 	return (
 		<div class="dropdown">
 			<div tabindex="0" role="button" class="btn m-1">
-				{/* <span>{t("theme.changer.label")}</span> */}
 				<span>{t(`theme.changer.options.${currentTheme()}`)}</span>
 				<svg
 					width="12px"
@@ -88,7 +87,7 @@ export const ThemeChanger = () => {
 								}}
 								aria-label={t(`theme.changer.options.${theme}`)}
 								value={theme}
-								onChange={() => onThemeChange(theme)}
+								onChange={() => onThemeChange(theme as Theme)}
 							/>
 						</li>
 					)}

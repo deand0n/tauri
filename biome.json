@@ -1,6 +1,10 @@
 {
 	"$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
-	"vcs": { "enabled": false, "clientKind": "git", "useIgnoreFile": false },
+	"vcs": {
+		"enabled": false,
+		"clientKind": "git",
+		"useIgnoreFile": false
+	},
 	"files": { "ignoreUnknown": false, "ignore": [] },
 	"formatter": {
 		"enabled": true,
@@ -24,7 +28,10 @@
 				"noUnusedVariables": "error",
 				"useArrayLiterals": "off"
 			},
-			"style": { "noNamespace": "error", "useAsConstAssertion": "error" },
+			"style": {
+				"noNamespace": "error",
+				"useAsConstAssertion": "error"
+			},
 			"suspicious": {
 				"noExplicitAny": "error",
 				"noExtraNonNullAssertion": "error",

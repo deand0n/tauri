@@ -1,6 +1,6 @@
 import { JSX } from "solid-js";
-import { ThemeChanger } from "../lib/components/theme-changer";
 import { TranslationProvider } from "../lib/translation";
+import { Drawer } from "../lib/components/drawer";
 
 export type MainPageProps = {
 	children?: JSX.Element;
@@ -9,10 +9,8 @@ export type MainPageProps = {
 export const MainPage = (props: MainPageProps) => {
 	return (
 		<TranslationProvider>
-			<main class="container">
-				{props.children}
-				<ThemeChanger />
-			</main>
+			<Drawer />
+			<main class="container">{props.children}</main>
 		</TranslationProvider>
 	);
 };
