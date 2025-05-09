@@ -1,5 +1,11 @@
 {
 	"task": {
+		"create-modal": {
+			"open-button": "Create Task",
+			"submit": "Submit",
+			"description": "Description",
+			"due-date": "Due Date"
+		},
 		"list": {
 			"title": "Tasks",
 			"past": "Past",

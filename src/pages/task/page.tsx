@@ -1,8 +1,9 @@
 import { invoke } from "@tauri-apps/api/core";
-import { isAfter, isBefore, format, isSameDay } from "date-fns";
-import { createSignal, Match, onMount, Show, Switch } from "solid-js";
-import { TaskStatus, CreateTask, Task } from "../../lib/task";
+import { isAfter, isBefore, isSameDay } from "date-fns";
+import { Match, Switch, createSignal, onMount } from "solid-js";
+import { CreateTask, Task, TaskStatus } from "../../lib/task";
 import { useTranslation } from "../../lib/translation";
+import { CreateTaskModal } from "./create-task-modal";
 import { TaskList } from "./task-list";
 
 export const TaskPage = () => {
@@ -37,17 +38,6 @@ export const TaskPage = () => {
 		};
 	};
 
-	const addTask = async () => {
-		const task: CreateTask = {
-			description: "test task",
-			dueDate: format(new Date(), "yyyy-MM-dd"),
-		};
-		const createdTask: Task = await invoke("create_task", {
-			newTask: task,
-		});
-		setTasks([...(tasks() ?? []), createdTask]);
-	};
-
 	const deleteAllTasks = async () => {
 		await invoke("delete_all_tasks");
 		setTasks([]);
@@ -63,42 +53,44 @@ export const TaskPage = () => {
 		);
 	};
 
+	const onTaskCreate = async (task: CreateTask) => {
+		console.log(task);
+		const createdTask: Task = await invoke("create_task", {
+			newTask: task,
+		});
+		setTasks([...(tasks() ?? []), createdTask]);
+	};
+
 	onMount(async () => {
 		const t: Task[] = await invoke("get_tasks");
 		setTasks(t);
 	});
+
 	return (
 		<Switch>
 			<Match when={tasks()}>
-				<Show
-					when={!!tasks()?.length}
-					fallback={<div>No tasks found</div>}
-				>
-					<TaskList
-						title={t("task.list.past")}
-						tasks={derivedTasks().pastTasks}
-						onCheckedChange={onTaskCheckedChange}
-					/>
-					<TaskList
-						initialOpen={true}
-						title={t("task.list.present")}
-						tasks={derivedTasks().presentTasks}
-						onCheckedChange={onTaskCheckedChange}
-					/>
-					<TaskList
-						title={t("task.list.future")}
-						tasks={derivedTasks().futureTasks}
-						onCheckedChange={onTaskCheckedChange}
-					/>
-					<TaskList
-						title={t("task.list.completed")}
-						tasks={derivedTasks().completedTasks}
-						onCheckedChange={onTaskCheckedChange}
-					/>
-				</Show>
-				<button type="button" class="btn btn-primary" onClick={addTask}>
-					Create Task
-				</button>
+				<TaskList
+					title={t("task.list.past")}
+					tasks={derivedTasks().pastTasks}
+					onCheckedChange={onTaskCheckedChange}
+				/>
+				<TaskList
+					initialOpen={true}
+					title={t("task.list.present")}
+					tasks={derivedTasks().presentTasks}
+					onCheckedChange={onTaskCheckedChange}
+				/>
+				<TaskList
+					title={t("task.list.future")}
+					tasks={derivedTasks().futureTasks}
+					onCheckedChange={onTaskCheckedChange}
+				/>
+				<TaskList
+					title={t("task.list.completed")}
+					tasks={derivedTasks().completedTasks}
+					onCheckedChange={onTaskCheckedChange}
+				/>
+
 				<button
 					type="button"
 					class="btn btn-danger"
@@ -106,6 +98,7 @@ export const TaskPage = () => {
 				>
 					Delete All Tasks
 				</button>
+				<CreateTaskModal onSubmit={onTaskCreate} />
 			</Match>
 			<Match when={!tasks()}>
 				<div>{t("loading")}</div>

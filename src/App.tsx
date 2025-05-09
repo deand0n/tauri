@@ -1,6 +1,6 @@
 import { Route, Router } from "@solidjs/router";
-import { TaskPage } from "./pages/task/page";
 import { MainPage } from "./pages/main";
+import { TaskPage } from "./pages/task/page";
 
 export const App = () => {
 	return (

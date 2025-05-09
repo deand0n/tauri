@@ -1,5 +1,5 @@
-import { Task, TaskStatus } from "../../lib/task";
 import { createSignal } from "solid-js";
+import { Task, TaskStatus } from "../../lib/task";
 
 export type TaskCardProps = {
 	task: Task;
@@ -21,17 +21,19 @@ export const TaskCard = ({
 	};
 
 	return (
-		<li class="list-row">
-			<input
-				class="checkbox checkbox-primary"
-				checked={isChecked()}
-				type="checkbox"
-				on:change={() => toggleStatus()}
-			/>
-			<div class="flex flex-col">
-				<div>{task.description}</div>
-				<div>{task.dueDate}</div>
-			</div>
+		<li class="list-row w-full">
+			<label class="label list-col-grow">
+				<input
+					class="checkbox checkbox-primary"
+					checked={isChecked()}
+					type="checkbox"
+					on:change={() => toggleStatus()}
+				/>
+				<div class="flex flex-col">
+					<div>{task.description}</div>
+					<div>{task.dueDate}</div>
+				</div>
+			</label>
 		</li>
 	);
 };
