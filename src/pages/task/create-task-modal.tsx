@@ -1,5 +1,7 @@
 import { format } from "date-fns";
 import { createSignal } from "solid-js";
+import { DateFormats } from "../../lib/dateUtils";
+import { Plus } from "../../lib/icons/plus";
 import { CreateTask } from "../../lib/task";
 import { useTranslation } from "../../lib/translation";
 
@@ -15,7 +17,7 @@ export const CreateTaskModal = (props: CreateTaskModalProps) => {
 	const [description, setDescription] = createSignal<string>();
 	const [dueDate, setDueDate] = createSignal<string>();
 
-	const defaultDueDate = format(new Date(), "yyyy-MM-dd");
+	const defaultDueDate = format(new Date(), DateFormats.DATE_SHORT);
 
 	const onSubmit = () => {
 		props.onSubmit?.({
@@ -33,8 +35,11 @@ export const CreateTaskModal = (props: CreateTaskModalProps) => {
 
 	return (
 		<div>
-			<button class="btn" onClick={() => dialogElement.showModal()}>
-				{t("task.create-modal.open-button")}
+			<button
+				class="btn btn-primary btn-circle btn-xl fixed right-5 bottom-5"
+				onClick={() => dialogElement.showModal()}
+			>
+				<Plus />
 			</button>
 			<dialog ref={dialogElement} class="modal">
 				<div class="modal-box">

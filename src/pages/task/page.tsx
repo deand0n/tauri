@@ -38,11 +38,6 @@ export const TaskPage = () => {
 		};
 	};
 
-	const deleteAllTasks = async () => {
-		await invoke("delete_all_tasks");
-		setTasks([]);
-	};
-
 	const onTaskCheckedChange = async (task: Task) => {
 		const updatedTask: Task = await invoke("toggle_task_status", {
 			id: task.id,
@@ -67,42 +62,38 @@ export const TaskPage = () => {
 	});
 
 	return (
-		<Switch>
-			<Match when={tasks()}>
-				<TaskList
-					title={t("task.list.past")}
-					tasks={derivedTasks().pastTasks}
-					onCheckedChange={onTaskCheckedChange}
-				/>
-				<TaskList
-					initialOpen={true}
-					title={t("task.list.present")}
-					tasks={derivedTasks().presentTasks}
-					onCheckedChange={onTaskCheckedChange}
-				/>
-				<TaskList
-					title={t("task.list.future")}
-					tasks={derivedTasks().futureTasks}
-					onCheckedChange={onTaskCheckedChange}
-				/>
-				<TaskList
-					title={t("task.list.completed")}
-					tasks={derivedTasks().completedTasks}
-					onCheckedChange={onTaskCheckedChange}
-				/>
-
-				<button
-					type="button"
-					class="btn btn-danger"
-					onClick={deleteAllTasks}
-				>
-					Delete All Tasks
-				</button>
-				<CreateTaskModal onSubmit={onTaskCreate} />
-			</Match>
-			<Match when={!tasks()}>
-				<div>{t("loading")}</div>
-			</Match>
-		</Switch>
+		<div class="relative h-full">
+			<Switch>
+				<Match when={tasks()}>
+					<div class="flex flex-col gap-1">
+						<TaskList
+							title={t("task.list.past")}
+							tasks={derivedTasks().pastTasks}
+							onCheckedChange={onTaskCheckedChange}
+						/>
+						<TaskList
+							initialOpen={true}
+							title={t("task.list.present")}
+							tasks={derivedTasks().presentTasks}
+							onCheckedChange={onTaskCheckedChange}
+						/>
+						<TaskList
+							title={t("task.list.future")}
+							tasks={derivedTasks().futureTasks}
+							onCheckedChange={onTaskCheckedChange}
+						/>
+						<TaskList
+							title={t("task.list.completed")}
+							tasks={derivedTasks().completedTasks}
+							onCheckedChange={onTaskCheckedChange}
+						/>
+					</div>
+				</Match>
+				<Match when={!tasks()}>
+					<div>{t("loading")}</div>
+				</Match>
+			</Switch>
+			<CreateTaskModal onSubmit={onTaskCreate} />
+		</div>
 	);
 };

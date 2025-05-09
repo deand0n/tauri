@@ -1,6 +1,6 @@
-import { createSignal, For } from "solid-js";
-import { TaskCard } from "./task-card";
+import { For, createSignal } from "solid-js";
 import { Task } from "../../lib/task";
+import { TaskCard } from "./task-card";
 
 export type TaskListProps = {
 	initialOpen?: boolean;
@@ -18,9 +18,12 @@ export const TaskList = (props: TaskListProps) => {
 				type="checkbox"
 				onChange={() => setIsOpen(!isOpen())}
 				checked={isOpen()}
+				class="peer"
 			/>
-			<div class="collapse-title font-semibold">{props.title}</div>
-			<div class="collapse-content text-sm">
+			<div class="collapse-title font-semibold peer-checked:bg-base-300">
+				{props.title}
+			</div>
+			<div class="collapse-content peer-checked:bg-base-300 p-0">
 				<ul class="list">
 					<For each={props.tasks}>
 						{(task) => (

@@ -1,21 +1,22 @@
+import { JSX } from "solid-js";
 import { ThemeChanger } from "./theme-changer";
 
-export const Drawer = () => {
+export type DrawerProps = {
+	children: JSX.Element[];
+};
+export const Drawer = (props: DrawerProps) => {
 	return (
 		<div class="drawer">
 			<input id="my-drawer" type="checkbox" class="drawer-toggle" />
-			<div class="drawer-content">
-				<label for="my-drawer" class="btn btn-primary drawer-button">
-					Open drawer
-				</label>
-			</div>
+			<div class="drawer-content">{props.children}</div>
 			<div class="drawer-side">
 				<label
 					for="my-drawer"
 					aria-label="close sidebar"
 					class="drawer-overlay"
 				></label>
-				<ul class="menu bg-base-200 text-base-content min-h-full w-80 p-4">
+
+				<ul class="menu bg-base-200 text-base-content min-h-full w-80 p-4 m-0">
 					<li>
 						<ThemeChanger />
 					</li>

@@ -17,7 +17,11 @@ export const TaskCard = ({
 	const toggleStatus = async () => {
 		const newChecked = isChecked();
 		setIsChecked(!newChecked);
-		onChange?.(newChecked);
+
+		setTimeout(() => {
+			// TODO: add :tada: animation
+			onChange?.(newChecked);
+		}, 400);
 	};
 
 	return (
