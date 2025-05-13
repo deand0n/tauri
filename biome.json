@@ -16,7 +16,13 @@
 		"lineWidth": 80,
 		"attributePosition": "auto",
 		"bracketSpacing": true,
-		"ignore": ["**/build", "**/coverage", "**/src-tauri", "**/node_modules"]
+		"ignore": [
+			"**/build",
+			"**/coverage",
+			"**/src-tauri",
+			"**/node_modules",
+			"**/globals.d.ts"
+		]
 	},
 	"organizeImports": { "enabled": true },
 	"linter": {
@@ -39,7 +45,8 @@
 				"noUnsafeDeclarationMerging": "error",
 				"useNamespaceKeyword": "error"
 			}
-		}
+		},
+		"ignore": ["**/globals.d.ts"]
 	},
 	"javascript": {
 		"formatter": {

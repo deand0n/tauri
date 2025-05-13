@@ -1,3 +1,4 @@
+// TODO: add ordering
 export type Task = {
 	id: number;
 	description: string;

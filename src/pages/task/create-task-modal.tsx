@@ -1,5 +1,6 @@
-import { format } from "date-fns";
+import { format, formatISO } from "date-fns";
 import { createSignal } from "solid-js";
+import { DatePicker } from "../../lib/components/datepicker";
 import { DateFormats } from "../../lib/dateUtils";
 import { Plus } from "../../lib/icons/plus";
 import { CreateTask } from "../../lib/task";
@@ -11,26 +12,24 @@ export type CreateTaskModalProps = {
 export const CreateTaskModal = (props: CreateTaskModalProps) => {
 	let dialogElement!: HTMLDialogElement;
 	let formElement!: HTMLFormElement;
-	let dueDateElement!: HTMLInputElement;
+
+	const defaultDueDate = formatISO(new Date(), { representation: "date" });
 
 	const { t } = useTranslation();
 	const [description, setDescription] = createSignal<string>();
-	const [dueDate, setDueDate] = createSignal<string>();
-
-	const defaultDueDate = format(new Date(), DateFormats.DATE_SHORT);
+	const [dueDate, setDueDate] = createSignal<string>(defaultDueDate);
 
 	const onSubmit = () => {
 		props.onSubmit?.({
 			description: description()!,
-			dueDate: dueDate() ?? defaultDueDate,
+			dueDate: dueDate(),
 		});
 		formElement.reset();
-		dueDateElement.value = defaultDueDate;
 	};
 
 	const onClose = () => {
 		formElement.reset();
-		dueDateElement.value = defaultDueDate;
+		setDescription("");
 	};
 
 	return (
@@ -51,7 +50,7 @@ export const CreateTaskModal = (props: CreateTaskModalProps) => {
 								</span>
 								<textarea
 									required
-									class="textarea validator"
+									class="textarea validator resize-none"
 									name="description"
 									onChange={(e) =>
 										setDescription(e.target.value)
@@ -59,6 +58,15 @@ export const CreateTaskModal = (props: CreateTaskModalProps) => {
 								/>
 							</label>
 							<label class="floating-label">
+								<span>{t("task.create-modal.due-date")}</span>
+								<DatePicker
+									onChange={(e) => setDueDate(e)}
+									name="due-date"
+									id="due-date"
+									value={dueDate()}
+								/>
+							</label>
+							{/* <label class="floating-label">
 								<span>{t("task.create-modal.due-date")}</span>
 								<input
 									ref={dueDateElement}
@@ -69,7 +77,7 @@ export const CreateTaskModal = (props: CreateTaskModalProps) => {
 									name="due-date"
 									value={defaultDueDate}
 								/>
-							</label>
+							</label> */}
 						</fieldset>
 						<div class="modal-action">
 							<button class="btn btn-primary">
