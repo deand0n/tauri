@@ -1,5 +1,12 @@
-import { createSignal } from "solid-js";
+import {
+	type ElementDropTargetEventBasePayload,
+	draggable,
+	dropTargetForElements,
+	monitorForElements,
+} from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+import { createSignal, onMount } from "solid-js";
 import { Task, TaskStatus } from "../../lib/task";
+import styles from "./task-card.module.css";
 
 export type TaskCardProps = {
 	task: Task;
@@ -10,9 +17,12 @@ export const TaskCard = ({
 	task,
 	onCheckedChange: onChange,
 }: TaskCardProps) => {
+	let listElement!: HTMLLIElement;
+
 	const [isChecked, setIsChecked] = createSignal(
 		task.status === TaskStatus.COMPLETED,
 	);
+	const [dragging, setDragging] = createSignal(false);
 
 	const toggleStatus = async () => {
 		const newChecked = isChecked();
@@ -24,9 +34,23 @@ export const TaskCard = ({
 		}, 400);
 	};
 
+	onMount(() => {
+		draggable({
+			element: listElement,
+			onDragStart: () => setDragging(true),
+			onDrop: () => setDragging(false),
+		});
+	});
+
 	return (
-		<li class="list-row w-full">
-			<label class="label list-col-grow">
+		<li
+			ref={listElement}
+			class="list-row w-full"
+			classList={{
+				[styles.dragging]: dragging(),
+			}}
+		>
+			<div class="flex flex-row gap-3 list-col-grow">
 				<input
 					class="checkbox checkbox-primary"
 					checked={isChecked()}
@@ -37,7 +61,7 @@ export const TaskCard = ({
 					<div>{task.description}</div>
 					<div>{task.dueDate}</div>
 				</div>
-			</label>
+			</div>
 		</li>
 	);
 };
