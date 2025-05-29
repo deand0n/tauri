@@ -1,4 +1,5 @@
 import { For, createSignal, onMount } from "solid-js";
+import Sortable from "sortablejs";
 import { Task } from "../../lib/task";
 import { TaskCard } from "./task-card";
 
@@ -13,6 +14,13 @@ export const TaskList = (props: TaskListProps) => {
 	let listElement!: HTMLUListElement;
 
 	const [isOpen, setIsOpen] = createSignal(props.initialOpen);
+
+	onMount(() => {
+		new Sortable(listElement, {
+			forceFallback: true,
+			ghostClass: "bg-base-100",
+		});
+	});
 
 	return (
 		<div class="collapse collapse-arrow bg-base-100 border-base-300 border select-none">

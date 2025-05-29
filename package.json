@@ -13,7 +13,6 @@
 	},
 	"license": "MIT",
 	"dependencies": {
-		"@atlaskit/pragmatic-drag-and-drop": "^1.6.1",
 		"@solid-primitives/i18n": "^2.2.1",
 		"@solidjs/router": "^0.15.3",
 		"@tailwindcss/vite": "^4.1.5",
@@ -24,6 +23,7 @@
 		"daisyui": "^5.0.35",
 		"date-fns": "^4.1.0",
 		"solid-js": "^1.9.3",
+		"sortablejs": "^1.15.6",
 		"tailwindcss": "^4.1.5"
 	},
 	"devDependencies": {
