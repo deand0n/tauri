@@ -8,7 +8,9 @@ export const Drawer = (props: DrawerProps) => {
 	return (
 		<div class="drawer">
 			<input id="my-drawer" type="checkbox" class="drawer-toggle" />
-			<div class="drawer-content">{props.children}</div>
+			<div class="drawer-content flex flex-col items-center justify-center">
+				{props.children}
+			</div>
 			<div class="drawer-side">
 				<label
 					for="my-drawer"

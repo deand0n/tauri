@@ -14,6 +14,7 @@ pub fn create_task(new_task: CreateTask) -> Task {
     let new_task = CreateTask {
         description: new_task.description,
         due_date: new_task.due_date,
+        weight: new_task.weight,
     };
 
     diesel::insert_into(task::table)
@@ -39,6 +40,7 @@ pub fn update_task(id: i32, new_task: CreateTask) {
     let new_task = CreateTask {
         description: new_task.description,
         due_date: new_task.due_date,
+        weight: new_task.weight
     };
 
     diesel::update(task::table.find(id))

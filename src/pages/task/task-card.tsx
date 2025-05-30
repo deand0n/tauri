@@ -27,8 +27,12 @@ export const TaskCard = ({
 	};
 
 	return (
-		<li ref={listElement} class="list-row w-full">
-			<div class="flex flex-row gap-3 list-col-grow">
+		<li
+			ref={listElement}
+			class="list-row w-full after:!border-0 bg-base-200 outline-1 outline-primary/30 py-2"
+			data-id={task.weight.toString()}
+		>
+			<div class="flex flex-row gap-3 list-col-grow items-center">
 				<input
 					class="checkbox checkbox-primary"
 					checked={isChecked()}

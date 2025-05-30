@@ -4,10 +4,12 @@ export type Task = {
 	description: string;
 	dueDate: string;
 	status: TaskStatus;
+	weight: number;
 };
 export type CreateTask = {
 	description: string;
 	dueDate: string;
+	weight: number;
 };
 
 export type TaskRepeat = {

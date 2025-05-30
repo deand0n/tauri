@@ -6,6 +6,7 @@ diesel::table! {
         description -> Text,
         due_date -> Text,
         status -> Text,
+        weight -> Integer,
     }
 }
 

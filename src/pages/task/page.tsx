@@ -7,7 +7,7 @@ import { CreateTaskModal } from "./create-task-modal";
 import { TaskList } from "./task-list";
 
 export const TaskPage = () => {
-	const [tasks, setTasks] = createSignal<Task[]>();
+	const [tasks, setTasks] = createSignal<Task[]>([]);
 	const { t } = useTranslation();
 
 	const derivedTasks = () => {
@@ -15,6 +15,9 @@ export const TaskPage = () => {
 			present: Task[] = [],
 			future: Task[] = [],
 			completed: Task[] = [];
+
+		const sortByWeight = (tasks: Task[]) =>
+			tasks.sort((a, b) => a.weight - b.weight);
 
 		for (const t of tasks() ?? []) {
 			if (t.status === TaskStatus.COMPLETED) {
@@ -31,10 +34,10 @@ export const TaskPage = () => {
 			}
 		}
 		return {
-			pastTasks: past,
-			presentTasks: present,
-			futureTasks: future,
-			completedTasks: completed,
+			pastTasks: sortByWeight(past),
+			presentTasks: sortByWeight(present),
+			futureTasks: sortByWeight(future),
+			completedTasks: sortByWeight(completed),
 		};
 	};
 
@@ -44,16 +47,18 @@ export const TaskPage = () => {
 		});
 
 		setTasks(() =>
-			tasks()!.map((t) => (t.id === task.id ? updatedTask : t)),
+			tasks().map((t) => (t.id === task.id ? updatedTask : t)),
 		);
 	};
 
-	const onTaskCreate = async (task: CreateTask) => {
-		console.log(task);
+	const onTaskCreate = async (task: Omit<CreateTask, "weight">) => {
 		const createdTask: Task = await invoke("create_task", {
-			newTask: task,
+			newTask: {
+				...task,
+				weight: tasks().length + 1,
+			},
 		});
-		setTasks([...(tasks() ?? []), createdTask]);
+		setTasks([...tasks(), createdTask]);
 	};
 
 	onMount(async () => {
@@ -62,10 +67,10 @@ export const TaskPage = () => {
 	});
 
 	return (
-		<div class="relative h-full">
+		<div class="relative h-full w-full">
 			<Switch>
-				<Match when={tasks()}>
-					<div class="flex flex-col gap-1">
+				<Match when={tasks().length}>
+					<div class="flex flex-col gap-3 md:flex-row md:flex-wrap md:justify-center">
 						<TaskList
 							title={t("task.list.past")}
 							tasks={derivedTasks().pastTasks}
@@ -89,7 +94,7 @@ export const TaskPage = () => {
 						/>
 					</div>
 				</Match>
-				<Match when={!tasks()}>
+				<Match when={!tasks().length}>
 					<div>{t("loading")}</div>
 				</Match>
 			</Switch>

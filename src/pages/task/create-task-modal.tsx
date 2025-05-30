@@ -6,7 +6,7 @@ import { CreateTask } from "../../lib/task";
 import { useTranslation } from "../../lib/translation";
 
 export type CreateTaskModalProps = {
-	onSubmit: (task: CreateTask) => void;
+	onSubmit: (task: Omit<CreateTask, "weight">) => void;
 };
 export const CreateTaskModal = (props: CreateTaskModalProps) => {
 	let dialogElement!: HTMLDialogElement;

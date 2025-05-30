@@ -10,6 +10,7 @@ pub struct Task {
     pub description: String,
     pub due_date: String,
     pub status: String,
+    pub weight: i32,
 }
 
 #[derive(Insertable, Serialize, Deserialize, AsChangeset)]
@@ -18,6 +19,7 @@ pub struct Task {
 pub struct CreateTask {
     pub description: String,
     pub due_date: String,
+    pub weight: i32,
 }
 
 #[derive(Queryable, Selectable, Serialize, Deserialize, Identifiable)]
