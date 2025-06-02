@@ -7,22 +7,25 @@ diesel::table! {
         due_date -> Text,
         status -> Text,
         weight -> Integer,
+        cron -> Nullable<Text>,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
     }
 }
 
 diesel::table! {
-    task_repeat (id) {
+    task_entry (id) {
         id -> Integer,
+        datetime -> Text,
         task_id -> Integer,
-        frequency -> Text,
-        repeat_at -> Text,
-        end_date -> Nullable<Text>,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
     }
 }
 
-diesel::joinable!(task_repeat -> task (task_id));
+diesel::joinable!(task_entry -> task (task_id));
 
 diesel::allow_tables_to_appear_in_same_query!(
     task,
-    task_repeat,
+    task_entry,
 );

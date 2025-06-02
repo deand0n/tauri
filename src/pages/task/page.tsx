@@ -16,6 +16,7 @@ export const TaskPage = () => {
 			future: Task[] = [],
 			completed: Task[] = [];
 
+		// TODO: sort on backend
 		const sortByWeight = (tasks: Task[]) =>
 			tasks.sort((a, b) => a.weight - b.weight);
 
@@ -62,10 +63,12 @@ export const TaskPage = () => {
 	};
 
 	onMount(async () => {
+		// get_tasks before today, for today, after today, complete
 		const t: Task[] = await invoke("get_tasks");
 		setTasks(t);
 	});
 
+	// TODO: add ability to move between lists
 	return (
 		<div class="relative h-full w-full">
 			<Switch>
