@@ -3,16 +3,15 @@ use std::{str::FromStr, time::Duration};
 use chrono::{DateTime, Utc};
 use cron::Schedule;
 use diesel::result::Error;
-use diesel::{
-    Connection, ExpressionMethods, OptionalExtension, QueryDsl, RunQueryDsl, SelectableHelper,
-};
+use diesel::{Connection, ExpressionMethods, OptionalExtension, QueryDsl, RunQueryDsl};
 
-use crate::db::pagination::Paginate;
+use crate::db::pagination::{Page, PageParams, Paginate};
 use crate::db::{
     establish_connection,
     schema::{task, task_entry},
 };
 
+use super::models::TaskEntry;
 use super::{
     enums::TaskStatus,
     models::{CreateTask, CreateTaskEntry, Task},
@@ -74,28 +73,34 @@ pub fn create_task(new_task: CreateTask) -> Task {
 }
 
 #[tauri::command]
-pub fn get_tasks() -> Vec<Task> {
+pub fn get_tasks(page_params: PageParams) -> Page<Task> {
     let conn = &mut establish_connection();
 
     task::table
         .select(task::all_columns)
-        .paginate(0)
+        .paginate(page_params.page, page_params.page_size)
         .load_and_count_pages(conn)
         .expect("Cannot load tasks")
-        .0
 }
 
 #[tauri::command]
-pub fn get_tasks_by_date(from: String, to: String) -> Vec<Task> {
+pub fn get_task_entries_by_date(
+    from: String,
+    to: String,
+    page_params: PageParams,
+) -> Page<TaskEntry> {
+    // TODO: implement
     let from =
         DateTime::parse_from_str(from.as_str(), "%Y-%m-%d").expect("Invalid date string provided");
     let to =
         DateTime::parse_from_str(to.as_str(), "%Y-%m-%d").expect("Invalid date string provided");
 
-    let mut conn = establish_connection();
+    let conn = &mut establish_connection();
 
-    task::table
-        .load::<Task>(&mut conn)
+    task_entry::table
+        .select(task_entry::all_columns)
+        .paginate(page_params.page, page_params.page_size)
+        .load_and_count_pages(conn)
         .expect("Cannot load tasks")
 }
 
@@ -119,51 +124,44 @@ pub fn update_task(id: i32, new_task: CreateTask) {
 
 #[tauri::command]
 pub fn delete_task(id: i32) {
-    let mut conn = establish_connection();
+    let conn = &mut establish_connection();
 
-    diesel::delete(task::table.find(id))
-        .execute(&mut conn)
-        .expect("Cannot delete task");
-}
+    let task = task::table.find(id);
+    diesel::delete(task).execute(conn).expect("msg");
 
-#[tauri::command]
-pub fn delete_all_tasks() {
-    let mut conn = establish_connection();
-
-    diesel::delete(task::table)
-        .execute(&mut conn)
-        .expect("Cannot delete tasks");
+    let task_entries = task_entry::table.filter(task_entry::task_id.eq(id));
+    diesel::delete(task_entries).execute(conn).expect("msg");
 }
 
 #[tauri::command]
 pub fn get_task(id: i32) -> Option<Task> {
-    let mut conn = establish_connection();
+    let conn = &mut establish_connection();
 
     task::table
         .find(id)
-        .first(&mut conn)
+        .first(conn)
         .optional()
         .expect("Cannot load task")
 }
 
 #[tauri::command]
-pub fn toggle_task_status(id: i32) -> Option<Task> {
-    let mut conn = establish_connection();
+pub fn toggle_task_entry_status(id: i32) -> Option<TaskEntry> {
+    let conn = &mut establish_connection();
 
-    let task: Task = task::table
+    let task_entry: TaskEntry = task_entry::table
         .find(id)
-        .first(&mut conn)
+        .first(conn)
         .optional()
         .expect("Cannot load task")?;
 
-    let new_status: TaskStatus = match task.status.into() {
+    let new_status: TaskStatus = match task_entry.status.into() {
         TaskStatus::New => TaskStatus::Completed,
         TaskStatus::Completed => TaskStatus::New,
     };
 
-    diesel::update(task::table.find(id))
-        .set(task::dsl::status.eq::<String>(new_status.into()))
-        .get_result(&mut conn)
+    diesel::update(task_entry::table.find(id))
+        .set(task_entry::status.eq::<String>(new_status.into()))
+        .get_result(conn)
         .optional()
         .expect("Cannot load task")
 }

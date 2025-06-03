@@ -10,7 +10,6 @@ pub struct Task {
     pub id: i32,
     pub description: String,
     pub due_date: String,
-    pub status: String,
     pub weight: i32,
     pub cron: Option<String>,
     pub created_at: NaiveDateTime,
@@ -28,7 +27,7 @@ pub struct CreateTask {
     pub cron: Option<String>,
 }
 
-#[derive(Queryable, Selectable, Identifiable, PartialEq, Associations, Serialize, Deserialize)]
+#[derive(Queryable, Selectable, Identifiable, Associations, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 #[diesel(table_name = crate::db::schema::task_entry)]
 #[diesel(check_for_backend(diesel::sqlite::Sqlite))]
@@ -36,12 +35,13 @@ pub struct CreateTask {
 pub struct TaskEntry {
     pub id: i32,
     pub datetime: String,
+    pub status: String,
     pub task_id: i32,
     pub created_at: NaiveDateTime,
     pub updated_at: NaiveDateTime,
 }
 
-#[derive(Insertable, Serialize, Deserialize, AsChangeset, PartialEq)]
+#[derive(Insertable, Serialize, Deserialize, AsChangeset)]
 #[serde(rename_all = "camelCase")]
 #[diesel(table_name  = crate::db::schema::task_entry)]
 #[diesel(check_for_backend(diesel::sqlite::Sqlite))]

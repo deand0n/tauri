@@ -19,11 +19,11 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             task::commands::create_task,
             task::commands::get_tasks,
+            task::commands::get_task_entries_by_date,
             task::commands::update_task,
             task::commands::delete_task,
-            task::commands::delete_all_tasks,
             task::commands::get_task,
-            task::commands::toggle_task_status,
+            task::commands::toggle_task_entry_status,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
