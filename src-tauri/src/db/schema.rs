@@ -5,7 +5,6 @@ diesel::table! {
         id -> Integer,
         description -> Text,
         due_date -> Text,
-        weight -> Integer,
         cron -> Nullable<Text>,
         created_at -> Timestamp,
         updated_at -> Timestamp,
@@ -18,6 +17,7 @@ diesel::table! {
         datetime -> Text,
         status -> Text,
         task_id -> Integer,
+        weight -> Nullable<Integer>,
         created_at -> Timestamp,
         updated_at -> Timestamp,
     }

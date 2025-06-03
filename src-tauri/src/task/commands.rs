@@ -1,6 +1,6 @@
 use std::{str::FromStr, time::Duration};
 
-use chrono::{DateTime, Utc};
+use chrono::{DateTime, NaiveDateTime, Utc};
 use cron::Schedule;
 use diesel::result::Error;
 use diesel::{Connection, ExpressionMethods, OptionalExtension, QueryDsl, RunQueryDsl};
@@ -25,7 +25,6 @@ pub fn create_task(new_task: CreateTask) -> Task {
         let new_task = CreateTask {
             description: new_task.description,
             due_date: new_task.due_date,
-            weight: new_task.weight,
             cron: new_task.cron,
         };
 
@@ -90,10 +89,10 @@ pub fn get_task_entries_by_date(
     page_params: PageParams,
 ) -> Page<TaskEntry> {
     // TODO: implement
-    let from =
-        DateTime::parse_from_str(from.as_str(), "%Y-%m-%d").expect("Invalid date string provided");
-    let to =
-        DateTime::parse_from_str(to.as_str(), "%Y-%m-%d").expect("Invalid date string provided");
+    // let from = NaiveDateTime::from(from);
+    // DateTime::parse_from_str(from.as_str(), "%Y-%m-%d").expect("Invalid date string provided");
+    // let to = NaiveDateTime::from(to);
+    // DateTime::parse_from_str(to.as_str(), "%Y-%m-%d").expect("Invalid date string provided");
 
     let conn = &mut establish_connection();
 
@@ -111,7 +110,6 @@ pub fn update_task(id: i32, new_task: CreateTask) {
     let new_task = CreateTask {
         description: new_task.description,
         due_date: new_task.due_date,
-        weight: new_task.weight,
         cron: new_task.cron,
     };
 

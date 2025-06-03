@@ -1,24 +1,25 @@
 import { invoke } from "@tauri-apps/api/core";
-import { isAfter, isBefore, isSameDay } from "date-fns";
+import { addDays, isAfter, isBefore, isSameDay, subDays } from "date-fns";
 import { Match, Switch, createSignal, onMount } from "solid-js";
-import { CreateTask, Task, TaskStatus } from "../../lib/task";
+import { CreateTask, Page, TaskEntry, TaskStatus } from "../../lib/task";
 import { useTranslation } from "../../lib/translation";
 import { CreateTaskModal } from "./create-task-modal";
 import { TaskList } from "./task-list";
 
 export const TaskPage = () => {
-	const [tasks, setTasks] = createSignal<Task[]>([]);
+	const [tasks, setTasks] = createSignal<TaskEntry[]>([]);
 	const { t } = useTranslation();
 
 	const derivedTasks = () => {
-		const past: Task[] = [],
-			present: Task[] = [],
-			future: Task[] = [],
-			completed: Task[] = [];
+		// TODO: get from backend
+		const past: TaskEntry[] = [],
+			present: TaskEntry[] = [],
+			future: TaskEntry[] = [],
+			completed: TaskEntry[] = [];
 
 		// TODO: sort on backend
-		const sortByWeight = (tasks: Task[]) =>
-			tasks.sort((a, b) => a.weight - b.weight);
+		const sortByWeight = (tasks: TaskEntry[]) =>
+			tasks.sort((a, b) => (a.weight ?? 0) - (b.weight ?? 0));
 
 		for (const t of tasks() ?? []) {
 			if (t.status === TaskStatus.COMPLETED) {
@@ -26,11 +27,11 @@ export const TaskPage = () => {
 				continue;
 			}
 
-			if (isSameDay(t.dueDate, new Date())) {
+			if (isSameDay(t.datetime, new Date())) {
 				present.push(t);
-			} else if (isBefore(t.dueDate, new Date())) {
+			} else if (isBefore(t.datetime, new Date())) {
 				past.push(t);
-			} else if (isAfter(t.dueDate, new Date())) {
+			} else if (isAfter(t.datetime, new Date())) {
 				future.push(t);
 			}
 		}
@@ -42,8 +43,8 @@ export const TaskPage = () => {
 		};
 	};
 
-	const onTaskCheckedChange = async (task: Task) => {
-		const updatedTask: Task = await invoke("toggle_task_status", {
+	const onTaskCheckedChange = async (task: TaskEntry) => {
+		const updatedTask: TaskEntry = await invoke("toggle_task_status", {
 			id: task.id,
 		});
 
@@ -53,7 +54,7 @@ export const TaskPage = () => {
 	};
 
 	const onTaskCreate = async (task: Omit<CreateTask, "weight">) => {
-		const createdTask: Task = await invoke("create_task", {
+		const createdTask: TaskEntry = await invoke("create_task", {
 			newTask: {
 				...task,
 				weight: tasks().length + 1,
@@ -64,8 +65,13 @@ export const TaskPage = () => {
 
 	onMount(async () => {
 		// get_tasks before today, for today, after today, complete
-		const t: Task[] = await invoke("get_tasks");
-		setTasks(t);
+		const t: Page<TaskEntry> = await invoke("get_task_entries_by_date", {
+			from: subDays(new Date(), 1).toISOString(),
+			to: addDays(new Date(), 1).toISOString(),
+			pageParams: { page: 0 },
+		});
+		console.log(t);
+		setTasks(t.data);
 	});
 
 	// TODO: add ability to move between lists

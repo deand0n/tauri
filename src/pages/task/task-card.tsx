@@ -1,8 +1,8 @@
 import { createSignal } from "solid-js";
-import { Task, TaskStatus } from "../../lib/task";
+import { TaskEntry, TaskStatus } from "../../lib/task";
 
 export type TaskCardProps = {
-	task: Task;
+	task: TaskEntry;
 	onCheckedChange?: (isChecked: boolean) => void;
 };
 
@@ -30,7 +30,7 @@ export const TaskCard = ({
 		<li
 			ref={listElement}
 			class="list-row w-full after:!border-0 bg-base-200 outline-1 outline-primary/30 py-2"
-			data-id={task.weight.toString()}
+			data-id={task.weight?.toString()}
 		>
 			<div class="flex flex-row gap-3 list-col-grow items-center">
 				<input
@@ -40,8 +40,8 @@ export const TaskCard = ({
 					on:change={() => toggleStatus()}
 				/>
 				<div class="flex flex-col">
-					<div>{task.description}</div>
-					<div>{task.dueDate}</div>
+					{/* <div>{task.description}</div>
+					<div>{task.dueDate}</div> */}
 				</div>
 			</div>
 		</li>

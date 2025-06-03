@@ -1,14 +1,13 @@
-import { invoke } from "@tauri-apps/api/core";
 import { For, createSignal, onMount } from "solid-js";
 import Sortable from "sortablejs";
-import { Task } from "../../lib/task";
+import { TaskEntry } from "../../lib/task";
 import { TaskCard } from "./task-card";
 
 export type TaskListProps = {
 	initialOpen?: boolean;
 	title: string;
-	tasks: Task[];
-	onCheckedChange?: (task: Task, isChecked: boolean) => void;
+	tasks: TaskEntry[];
+	onCheckedChange?: (task: TaskEntry, isChecked: boolean) => void;
 };
 
 export const TaskList = (props: TaskListProps) => {

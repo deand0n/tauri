@@ -10,7 +10,6 @@ pub struct Task {
     pub id: i32,
     pub description: String,
     pub due_date: String,
-    pub weight: i32,
     pub cron: Option<String>,
     pub created_at: NaiveDateTime,
     pub updated_at: NaiveDateTime,
@@ -23,7 +22,6 @@ pub struct Task {
 pub struct CreateTask {
     pub description: String,
     pub due_date: String,
-    pub weight: i32,
     pub cron: Option<String>,
 }
 
@@ -37,6 +35,7 @@ pub struct TaskEntry {
     pub datetime: String,
     pub status: String,
     pub task_id: i32,
+    pub weight: Option<i32>,
     pub created_at: NaiveDateTime,
     pub updated_at: NaiveDateTime,
 }

@@ -3,32 +3,35 @@ export type Task = {
 	id: number;
 	description: string;
 	dueDate: string;
-	status: TaskStatus;
-	weight: number;
+	cron?: string;
+	createdAt: string;
+	updatedAt: string;
 };
+
 export type CreateTask = {
 	description: string;
 	dueDate: string;
-	weight: number;
+	cron?: string;
 };
 
-export type TaskRepeat = {
+export type TaskEntry = {
 	id: number;
+	datetime: string;
+	status: TaskStatus;
 	taskId: number;
-	frequency: Frequency;
-	repeatAt: string;
-	endDate?: string;
+	weight?: number;
+	createdAt: string;
+	updatedAt: string;
 };
-
-export enum Frequency {
-	HOUR = "Hour",
-	DAY = "Day",
-	WEEK = "Week",
-	MONTH = "Month",
-	YEAR = "Year",
-}
 
 export enum TaskStatus {
 	NEW = "New",
 	COMPLETED = "Completed",
 }
+
+export type Page<T> = {
+	data: T[];
+	page: number;
+	page_size: number;
+	total_count: number;
+};

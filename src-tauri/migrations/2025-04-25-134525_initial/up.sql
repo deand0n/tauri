@@ -2,10 +2,9 @@ CREATE TABLE task (
     id INTEGER PRIMARY KEY NOT NULL,
     description TEXT NOT NULL,
     due_date TEXT NOT NULL,
-    weight INTEGER NOT NULL,
     cron TEXT,
-    created_at TIMESTAMP NOT NULL,
-    updated_at TIMESTAMP NOT NULL
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE task_entry (
@@ -13,8 +12,9 @@ CREATE TABLE task_entry (
     datetime TEXT NOT NULL,
     status TEXT NOT NULL DEFAULT 'New',
     task_id INTEGER NOT NULL,
-    created_at TIMESTAMP NOT NULL,
-    updated_at TIMESTAMP NOT NULL,
+    weight INTEGER,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     FOREIGN KEY(task_id) REFERENCES task(id)
 );
