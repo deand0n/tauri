@@ -1,5 +1,12 @@
 import { invoke } from "@tauri-apps/api/core";
-import { CreateTask, Page, PageParams, Task, TaskEntry } from "../../lib/task";
+import {
+	ChangeTaskEntryOrder,
+	CreateTask,
+	Page,
+	PageParams,
+	Task,
+	TaskEntry,
+} from "../../lib/task";
 
 export const getTaskEntriesByDates = async (
 	from: Date,
@@ -19,8 +26,16 @@ export const toggleTaskEntryStatus = async (id: number): Promise<TaskEntry> => {
 	});
 };
 
-export const createTask = async (newTask: CreateTask): Promise<Task> => {
+export const createTask = async (task: CreateTask): Promise<Task> => {
 	return invoke("create_task", {
-		newTask,
+		task,
+	});
+};
+
+export const changeTaskEntryOrder = async (
+	task_entry: ChangeTaskEntryOrder,
+): Promise<Task> => {
+	return invoke("change_task_entry_order", {
+		task_entry,
 	});
 };

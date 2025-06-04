@@ -6,11 +6,12 @@
 - [ ] add google integration
 - [ ] consider [FP](https://date-fns.org/v4.1.0/docs/FP-Guide)
 - [ ] move pagination to separate modules
+- [ ] add repositories to rust
 
 
 ## High priority
 - [ ] rethink sorting/ordering of tasks
 - [ ] today's complete tasks and other
-- [ ] recreate task entries on task
+- [x] recreate task entries on task
 - [x] add task description to task_entry
 - [x] support DTO

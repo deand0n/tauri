@@ -19,10 +19,15 @@ export type TaskEntry = {
 	datetime: string;
 	status: TaskStatus;
 	taskId: number;
-	weight?: number;
+	weight?: string;
 	createdAt: string;
 	updatedAt: string;
 	task?: Task;
+};
+
+export type ChangeTaskEntryOrder = {
+	id: number;
+	weight: number;
 };
 
 export enum TaskStatus {

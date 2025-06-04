@@ -21,10 +21,6 @@ export const TaskPage = () => {
 			future: TaskEntry[] = [],
 			completed: TaskEntry[] = [];
 
-		// TODO: sort on backend
-		const sortByWeight = (tasks: TaskEntry[]) =>
-			tasks.sort((a, b) => (a.weight ?? 0) - (b.weight ?? 0));
-
 		for (const t of tasks() ?? []) {
 			if (t.status === TaskStatus.COMPLETED) {
 				completed.push(t);
@@ -40,10 +36,10 @@ export const TaskPage = () => {
 			}
 		}
 		return {
-			pastTasks: sortByWeight(past),
-			presentTasks: sortByWeight(present),
-			futureTasks: sortByWeight(future),
-			completedTasks: sortByWeight(completed),
+			pastTasks: past,
+			presentTasks: present,
+			futureTasks: future,
+			completedTasks: completed,
 		};
 	};
 

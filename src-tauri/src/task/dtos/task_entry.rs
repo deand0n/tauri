@@ -1,7 +1,7 @@
 use chrono::NaiveDateTime;
 use serde::{Deserialize, Serialize};
 
-use crate::task::models::{CreateTaskEntry, TaskEntry};
+use crate::task::models::TaskEntry;
 
 use super::task::TaskDto;
 
@@ -18,19 +18,6 @@ pub struct TaskEntryDto {
     pub updated_at: NaiveDateTime,
 }
 
-impl Into<TaskEntry> for TaskEntryDto {
-    fn into(self) -> TaskEntry {
-        TaskEntry {
-            id: self.id,
-            datetime: self.datetime,
-            status: self.status,
-            task_id: self.task_id,
-            weight: self.weight,
-            created_at: self.created_at,
-            updated_at: self.updated_at,
-        }
-    }
-}
 impl From<TaskEntry> for TaskEntryDto {
     fn from(value: TaskEntry) -> Self {
         TaskEntryDto {
@@ -53,19 +40,9 @@ pub struct CreateTaskEntryDto {
     pub datetime: String,
 }
 
-impl Into<CreateTaskEntry> for CreateTaskEntryDto {
-    fn into(self) -> CreateTaskEntry {
-        CreateTaskEntry {
-            task_id: self.task_id,
-            datetime: self.datetime,
-        }
-    }
-}
-impl From<CreateTaskEntry> for CreateTaskEntryDto {
-    fn from(value: CreateTaskEntry) -> Self {
-        CreateTaskEntryDto {
-            task_id: value.task_id,
-            datetime: value.datetime,
-        }
-    }
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ChangeTaskEntryOrderDto {
+    pub id: i32,
+    pub weight: i32,
 }

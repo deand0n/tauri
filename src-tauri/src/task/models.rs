@@ -40,11 +40,20 @@ pub struct TaskEntry {
     pub updated_at: NaiveDateTime,
 }
 
-#[derive(Insertable, Serialize, Deserialize)]
+#[derive(Insertable, Serialize, Deserialize, AsChangeset)]
 #[serde(rename_all = "camelCase")]
 #[diesel(table_name  = crate::db::schema::task_entry)]
 #[diesel(check_for_backend(diesel::sqlite::Sqlite))]
 pub struct CreateTaskEntry {
     pub task_id: i32,
     pub datetime: String,
+}
+
+#[derive(Insertable, Serialize, Deserialize, AsChangeset, Identifiable)]
+#[serde(rename_all = "camelCase")]
+#[diesel(table_name  = crate::db::schema::task_entry)]
+#[diesel(check_for_backend(diesel::sqlite::Sqlite))]
+pub struct ChangeTaskEntryOrder {
+    pub id: i32,
+    pub weight: i32,
 }
