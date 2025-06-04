@@ -36,3 +36,8 @@ export type Page<T> = {
 	page_size: number;
 	total_count: number;
 };
+
+export type PageParams = {
+	page: number;
+	pageSize?: number;
+};

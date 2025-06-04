@@ -1,9 +1,13 @@
-import { invoke } from "@tauri-apps/api/core";
 import { addDays, isAfter, isBefore, isSameDay, subDays } from "date-fns";
 import { Match, Switch, createSignal, onMount } from "solid-js";
-import { CreateTask, Page, TaskEntry, TaskStatus } from "../../lib/task";
+import { CreateTask, TaskEntry, TaskStatus } from "../../lib/task";
 import { useTranslation } from "../../lib/translation";
 import { CreateTaskModal } from "./create-task-modal";
+import {
+	createTask,
+	getTaskEntriesByDates,
+	toggleTaskEntryStatus,
+} from "./service";
 import { TaskList } from "./task-list";
 
 export const TaskPage = () => {
@@ -44,34 +48,31 @@ export const TaskPage = () => {
 	};
 
 	const onTaskCheckedChange = async (task: TaskEntry) => {
-		const updatedTask: TaskEntry = await invoke("toggle_task_status", {
-			id: task.id,
-		});
+		const updatedTask: TaskEntry = await toggleTaskEntryStatus(task.id);
 
 		setTasks(() =>
 			tasks().map((t) => (t.id === task.id ? updatedTask : t)),
 		);
 	};
 
-	const onTaskCreate = async (task: Omit<CreateTask, "weight">) => {
-		const createdTask: TaskEntry = await invoke("create_task", {
-			newTask: {
-				...task,
-				weight: tasks().length + 1,
-			},
-		});
-		setTasks([...tasks(), createdTask]);
+	const onTaskCreate = async (task: CreateTask) => {
+		await createTask(task);
+
+		const page = await getTaskEntriesByDates(
+			subDays(new Date(), 1),
+			addDays(new Date(), 1),
+			{ page: 0, pageSize: 9999 },
+		);
+		setTasks(page.data);
 	};
 
 	onMount(async () => {
-		// get_tasks before today, for today, after today, complete
-		const t: Page<TaskEntry> = await invoke("get_task_entries_by_date", {
-			from: subDays(new Date(), 1).toISOString(),
-			to: addDays(new Date(), 1).toISOString(),
-			pageParams: { page: 0 },
-		});
-		console.log(t);
-		setTasks(t.data);
+		const page = await getTaskEntriesByDates(
+			subDays(new Date(), 1),
+			addDays(new Date(), 1),
+			{ page: 0, pageSize: 9999 },
+		);
+		setTasks(page.data);
 	});
 
 	// TODO: add ability to move between lists

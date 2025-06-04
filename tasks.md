@@ -10,6 +10,7 @@
 
 ## High priority
 - [ ] rethink sorting/ordering of tasks
+- [ ] today's complete tasks and other
 - [ ] recreate task entries on task
-- [ ] add task description to task_entry
-- [ ] support DTO
+- [x] add task description to task_entry
+- [x] support DTO
