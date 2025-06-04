@@ -1,7 +1,7 @@
 import { For, createSignal, onMount } from "solid-js";
 import Sortable from "sortablejs";
 import { TaskEntry } from "../../lib/task";
-import { TaskCard } from "./task-card";
+import { TaskEntryCard } from "./task-card";
 
 export type TaskListProps = {
 	initialOpen?: boolean;
@@ -80,8 +80,8 @@ export const TaskList = (props: TaskListProps) => {
 				<ul ref={listElement} class="list gap-2 px-4 pt-2">
 					<For each={props.tasks}>
 						{(task) => (
-							<TaskCard
-								task={task}
+							<TaskEntryCard
+								entry={task}
 								onCheckedChange={(isChecked) =>
 									props.onCheckedChange?.(task, isChecked)
 								}

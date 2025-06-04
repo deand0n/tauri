@@ -22,6 +22,7 @@ export type TaskEntry = {
 	weight?: number;
 	createdAt: string;
 	updatedAt: string;
+	task?: Task;
 };
 
 export enum TaskStatus {

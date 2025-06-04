@@ -42,12 +42,3 @@ impl From<String> for TaskStatus {
         }
     }
 }
-
-#[derive(Debug, Serialize, Deserialize)]
-pub enum Frequency {
-    Hour,
-    Day,
-    Week,
-    Month,
-    Year,
-}

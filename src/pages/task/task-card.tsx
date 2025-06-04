@@ -1,19 +1,19 @@
 import { createSignal } from "solid-js";
 import { TaskEntry, TaskStatus } from "../../lib/task";
 
-export type TaskCardProps = {
-	task: TaskEntry;
+export type TaskEntryCardProps = {
+	entry: TaskEntry;
 	onCheckedChange?: (isChecked: boolean) => void;
 };
 
-export const TaskCard = ({
-	task,
-	onCheckedChange: onChange,
-}: TaskCardProps) => {
+export const TaskEntryCard = ({
+	entry,
+	onCheckedChange,
+}: TaskEntryCardProps) => {
 	let listElement!: HTMLLIElement;
 
 	const [isChecked, setIsChecked] = createSignal(
-		task.status === TaskStatus.COMPLETED,
+		entry.status === TaskStatus.COMPLETED,
 	);
 
 	const toggleStatus = async () => {
@@ -22,7 +22,7 @@ export const TaskCard = ({
 
 		setTimeout(() => {
 			// TODO: add :tada: animation
-			onChange?.(newChecked);
+			onCheckedChange?.(newChecked);
 		}, 400);
 	};
 
@@ -30,7 +30,7 @@ export const TaskCard = ({
 		<li
 			ref={listElement}
 			class="list-row w-full after:!border-0 bg-base-200 outline-1 outline-primary/30 py-2"
-			data-id={task.weight?.toString()}
+			data-id={entry.weight?.toString()}
 		>
 			<div class="flex flex-row gap-3 list-col-grow items-center">
 				<input
@@ -40,8 +40,8 @@ export const TaskCard = ({
 					on:change={() => toggleStatus()}
 				/>
 				<div class="flex flex-col">
-					{/* <div>{task.description}</div>
-					<div>{task.dueDate}</div> */}
+					<div>{entry.task!.description}</div>
+					<div>{entry.task!.dueDate}</div>
 				</div>
 			</div>
 		</li>
